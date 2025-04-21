@@ -14,25 +14,43 @@ def generate_embeddings(text) -> list[float]:
     return embedding.tolist()
 
 # Example usage
-embedding = generate_embeddings("you are doing great job, keep going")
-print(f"Embedding length: {len(embedding)}")
-print(f"First 5 values: {embedding}")
+# embedding = generate_embeddings("you are doing great job, keep going")
+# print(f"Embedding length: {len(embedding)}")
+# print(f"First 5 values: {embedding}")
 
 
 # Process first 50 documents with a 'plot' field
-documents = collection.find({"plot": {"$exists": True}}).limit(50)
+# documents = collection.find({"plot": {"$exists": True}}).limit(50)
 
-for doc in documents:
-    plot = doc.get("plot", "")
-    if not plot.strip():
-        continue  # Skip if plot is empty or missing
+# for doc in documents:
+#     plot = doc.get("plot", "")
+#     if not plot.strip():
+#         continue  # Skip if plot is empty or missing
 
-    embedding = generate_embeddings(plot)
+#     embedding = generate_embeddings(plot)
 
-    # Update document with the new 'embed_plot' field
-    collection.update_one(
-        {"_id": doc["_id"]},
-        {"$set": {"embed_plot": embedding}}
-    )
+#     # Update document with the new 'embed_plot' field
+#     collection.update_one(
+#         {"_id": doc["_id"]},
+#         {"$set": {"embed_plot": embedding}}
+#     )
 
-print("✅ Done embedding and updating 50 documents!")
+# print("✅ Done embedding and updating 50 documents!")
+
+query = "The Shawshank Redemption"
+
+result =collection.aggregate([
+    {"$vectorSearch": {
+        "queryVector": query,
+        "path": "embed_plot",
+        "numCandidates": 100,
+        "limit": 4,
+        "index": "vector_index_new",
+        "k": 5,
+        "score": {"$meta": "vectorScore"}
+    }}])
+
+for document in result:
+    print(f'Movie Name: {document["title"]},\nMovie Plot: {document["plot"]},\nScore: {document["score"]}')
+   
+    
