@@ -41,16 +41,16 @@ query = "The Shawshank Redemption"
 
 result =collection.aggregate([
     {"$vectorSearch": {
-        "queryVector": query,
+        "queryVector": generate_embeddings(query),
         "path": "embed_plot",
         "numCandidates": 100,
         "limit": 4,
         "index": "vector_index_new",
-        "k": 5,
-        "score": {"$meta": "vectorScore"}
+        
     }}])
 
 for document in result:
-    print(f'Movie Name: {document["title"]},\nMovie Plot: {document["plot"]},\nScore: {document["score"]}')
+    print(f'Movie Name: {document["title"]},\nMovie Plot: {document["plot"]}\n')
+# print("✅ Done embedding and updating 50 documents!")s
    
     
