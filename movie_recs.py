@@ -2,7 +2,7 @@ import pymongo
 from sentence_transformers import SentenceTransformer
 
 # MongoDB connection
-client = pymongo.MongoClient("mongodb+srv://wkldulhara:Lakshan2001mongodb@cluster0.sjz9f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient("mongodb+srv://<username>:<password>@cluster0.sjz9f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client.sample_mflix
 collection = db.movies
 
